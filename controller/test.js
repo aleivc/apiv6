@@ -6,7 +6,7 @@ test.get('/getDate', async (req, res) => {
     return res.send({
         success: true,
         msg: 'get success',
-        data: new Date()
+        data: 'some changes'
     })
 })
 
