@@ -1,0 +1,26 @@
+{
+  "name": "apiv6",
+  "version": "1.0.0",
+  "description": "https://apiv6.com 提供假数据接口(基于mockjs)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aleivc/apiv6.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aleivc/apiv6/issues"
+  },
+  "homepage": "https://github.com/aleivc/apiv6#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.21"
+  }
+}
