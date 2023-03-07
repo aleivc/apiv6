@@ -14,7 +14,7 @@ test.post('/setDate', async (req, res) => {
     return res.send({
         success: true,
         msg: 'post success',
-        data: process.env.NAME
+        data: 'some changes'
     })
 })
 
