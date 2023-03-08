@@ -6,7 +6,7 @@ test.get('/getDate', async (req, res) => {
     return res.send({
         success: true,
         msg: 'get success',
-        data: 'some changes'
+        data: [1, process.env.NAME2]
     })
 })
 
@@ -14,7 +14,7 @@ test.post('/setDate', async (req, res) => {
     return res.send({
         success: true,
         msg: 'post success',
-        data: process.env.NAME
+        data: [1, process.env.NAME]
     })
 })
 
