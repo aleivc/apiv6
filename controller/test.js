@@ -2,8 +2,22 @@ const express = require('express');
 
 const test = express.Router();
 
-test.get('/', (req, res) => {
-    res.send('test');
+function someTest(times = 0) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(times);
+        }, times * 1000);
+    })
+}
+
+test.get('/', async (req, res) => {
+    someTest(15).then((resp) =>{
+        return res.send({
+            success: true,
+            msg: 'hello',
+            data: resp
+        })
+    })
 });
 
 module.exports = test;
