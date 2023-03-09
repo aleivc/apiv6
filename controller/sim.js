@@ -39,6 +39,8 @@ async function getDate(deviceName, simNum) {
                         const date = res.data.data ? res.data.data.packageTime : '-该卡不存在-';
                         return { date, supplier: '齐犇' };
                     });
+            } else if( data.num === 0) {
+                return { date: '', supplier: 'wrong'}
             }
             const date = data.info.end_time || '---';
             return { date, supplier: '超巨' };
@@ -64,6 +66,7 @@ async function getSims(deviceNames) {
                 })
                 i--;
             }
+            console.log(arr);
             return arr;
         })
 }
