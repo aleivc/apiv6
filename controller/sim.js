@@ -21,7 +21,7 @@ async function getDate(deviceName, simNum) {
                 P_Result_URL: '',
             },
         })
-        .then(async ({ data }) => {
+        .then(async ({data}) => {
             if (data.num === 4) {
                 const tKey = moment(new Date()).format('YYYYMMDDHHmmss');
 
@@ -37,13 +37,13 @@ async function getDate(deviceName, simNum) {
                     .post('https://api.tibiot.cn/api/v1/card/queryCardInfo', payload)
                     .then((res) => {
                         const date = res.data.data ? res.data.data.packageTime : '-该卡不存在-';
-                        return { date, supplier: '齐犇' };
+                        return {date, supplier: '齐犇'};
                     });
-            } else if( data.num === 0) {
-                return { date: '', supplier: 'wrong'}
+            } else if (data.num === 0) {
+                return {date: '', supplier: 'wrong'}
             }
             const date = data.info.end_time || '---';
-            return { date, supplier: '超巨' };
+            return {date, supplier: '超巨'};
         });
 }
 
@@ -53,23 +53,21 @@ async function getSims(deviceNames) {
         .get(`http://101.132.195.53/tools/data/sim.php?page=1&device_name=${deviceNames}&start=&end=${time}`)
         .then(async ({data}) => {
             console.log(data);
-            return data;
-            // let arr = []
-            // let i = data.length - 1;
-            // while (i >= 0) {
-            //     const deviceName = data[i]['device_name'];
-            //     const simNum = data[i]['gps_data'].match(/"sim"\s*:\s*([^,\}\]]+)/)[1];
-            //
-            //     const endTime = await getDate(deviceName, simNum);
-            //     arr.push({
-            //         deviceName,
-            //         simNum,
-            //         ...endTime
-            //     })
-            //     i--;
-            // }
-            // console.log(arr);
-            // return arr;
+            let arr = []
+            let i = data.length - 1;
+            while (i >= 0) {
+                const deviceName = data[i]['device_name'];
+                const simNum = data[i]['gps_data'].match(/"sim"\s*:\s*([^,\}\]]+)/)[1];
+
+                const endTime = await getDate(deviceName, simNum);
+                arr.push({
+                    deviceName,
+                    simNum,
+                    ...endTime
+                })
+                i--;
+            }
+            return arr;
         })
 }
 
@@ -82,19 +80,20 @@ sim.get('/getSimInfo', async (req, res) => {
     const {deviceNames, startIndex, endIndex} = JSON.parse(query);
 
     console.log(startIndex, endIndex);
-    if(deviceNames) {
+    if (deviceNames) {
         // 根据设备名称查找
-        if(!deviceNames.toString().trim().includes(' ')) {
+        if (!deviceNames.toString().trim().includes(' ')) {
             // 查找单个
         }
 
         // 查找多个
         getSims(deviceNames.replaceAll(' ', '%0A')).then(result => {
-            return res.send({
-                success: true,
-                msg: 'get success',
-                data: result
-            })
+                res.setHeader('Access-Control-Allow-Origin','*')
+                res.send({
+                    success: true,
+                    msg: 'get success',
+                    data: result
+                })
         })
     } else if (startIndex && endIndex) {
         // 根据区间查找
