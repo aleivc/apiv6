@@ -45,17 +45,11 @@ async function getDate(deviceName, simNum) {
         });
 }
 
-async function getSim() {
-
-}
-
 async function getSims(deviceNames) {
-    console.log(deviceNames);
     const time = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
     return await axios
         .get(`http://101.132.195.53/tools/data/sim.php?page=1&device_name=${deviceNames}&start=&end=${time}`)
         .then(async ({data}) => {
-            console.log(data);
             let arr = []
             let i = data.length - 1;
             while (i >= 0) {
