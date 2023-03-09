@@ -52,22 +52,24 @@ async function getSims(deviceNames) {
     return await axios
         .get(`http://101.132.195.53/tools/data/sim.php?page=1&device_name=${deviceNames}&start=&end=${time}`)
         .then(async ({data}) => {
-            let arr = []
-            let i = data.length - 1;
-            while (i >= 0) {
-                const deviceName = data[i]['device_name'];
-                const simNum = data[i]['gps_data'].match(/"sim"\s*:\s*([^,\}\]]+)/)[1];
-
-                const endTime = await getDate(deviceName, simNum);
-                arr.push({
-                    deviceName,
-                    simNum,
-                    ...endTime
-                })
-                i--;
-            }
-            console.log(arr);
-            return arr;
+            console.log(data);
+            return data;
+            // let arr = []
+            // let i = data.length - 1;
+            // while (i >= 0) {
+            //     const deviceName = data[i]['device_name'];
+            //     const simNum = data[i]['gps_data'].match(/"sim"\s*:\s*([^,\}\]]+)/)[1];
+            //
+            //     const endTime = await getDate(deviceName, simNum);
+            //     arr.push({
+            //         deviceName,
+            //         simNum,
+            //         ...endTime
+            //     })
+            //     i--;
+            // }
+            // console.log(arr);
+            // return arr;
         })
 }
 

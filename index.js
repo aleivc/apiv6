@@ -8,7 +8,7 @@ require('dotenv').config()
 
 app.use(express.json());
 
-app.use('/sim', require('./controller/sim'));
+app.use('/api/sim', require('./controller/sim'));
 app.use('/test', require('./controller/test'))
 
 app.listen(3005, () => {
