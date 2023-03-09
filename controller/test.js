@@ -10,7 +10,7 @@ function someTest(times = 0) {
     })
 }
 
-test.get('/', async (req, res) => {
+test.get('/hello', async (req, res) => {
     someTest(15).then((resp) =>{
         return res.send({
             success: true,
