@@ -73,18 +73,11 @@ async function getSingle(deviceName) {
 const sim = express.Router();
 
 sim.get('/getSimInfo', async (req, res) => {
-    res.send(await getResult());
+    const {deviceName} = req.query;
+    res.send(!deviceName ?  [] : await getResult(deviceName.replaceAll('  ', ' ').split(' ')));
 })
 
-const deviceName = `102001198 
-102001256 
-102001282 
-102001284 
-102001330`;
-
-const devices = deviceName.replaceAll('  ', ' ').split(' \n');
-
-async function getResult() {
+async function getResult(devices) {
     const arr = [];
     for (let i of devices) {
         const res = await getSingle(i)
