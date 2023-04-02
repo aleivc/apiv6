@@ -10,6 +10,8 @@ app.use(express.json());
 
 app.use('/api/sim', require('./controller/sim'));
 
+app.use('/api/gps', require('./controller/gps'));
+
 app.listen(3005, () => {
     console.log('server listening on 3005');
 })
