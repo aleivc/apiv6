@@ -25,7 +25,7 @@ async function getResult(deviceName, date) {
                         if (resp.data !== null) {
                             const result = JSON.parse(resp.data);
                             for (let j of result.reverse()) {
-                                flag.push({...j, time: moment(j.time).format('HH:mm:ss')});
+                                flag.push({...j, time: moment(j.time).format('YYYY-MM-DD HH:mm:ss')});
                             }
                         }
                     })
