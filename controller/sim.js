@@ -2,8 +2,6 @@ const express = require('express');
 const axios = require('axios');
 const moment = require('moment');
 const md5 = require('js-md5');
-// const xlsx = require('node-xlsx');
-// const fs = require('fs');
 
 async function getDate(deviceName, simNum) {
     const P_AgentID = process.env.P_AgentID;
@@ -72,8 +70,9 @@ async function getSingle(deviceName) {
 
 const sim = express.Router();
 
-sim.get('/getSimInfo', async (req, res) => {
-    const {deviceName} = req.query;
+sim.post('/simInfo', async (req, res) => {
+    const { deviceName } = req.body;
+
     res.send(!deviceName ?  [] : await getResult(deviceName.replaceAll('  ', ' ').split(' ')));
 })
 
@@ -84,10 +83,6 @@ async function getResult(devices) {
         arr.push(res);
     }
     return arr;
-    // const sheetOptions = {'!cols': [{wch: 20}, {wch: 30}, {wch: 30}, {wch: 30}]};
-    // const worksheets = [{name: `sheet1`, data: arr, options: sheetOptions}];
-    // const buffer = xlsx.build(worksheets); // Returns a buffer
-    // await fs.writeFileSync(`./output.xlsx`, buffer);
 }
 
 module.exports = sim;
