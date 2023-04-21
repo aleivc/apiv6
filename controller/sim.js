@@ -72,7 +72,10 @@ const sim = express.Router();
 
 sim.post('/simInfo', async (req, res) => {
     const { deviceName } = req.body;
-
+    res.header('Access-Control-Allow-Origin', 'mxzn.top');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Methods', '*');
+    res.header('Content-Type', 'application/json;charset=utf-8');
     res.send(!deviceName ?  [] : await getResult(deviceName.replaceAll('  ', ' ').split(' ')));
 })
 
