@@ -9,6 +9,7 @@ require('dotenv').config()
 app.use(express.json());
 
 app.use('/api/sim', require('./controller/sim'));
+app.use('/api/station', require('./controller/station'))
 
 app.use('/api/gps', require('./controller/gps'));
 

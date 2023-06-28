@@ -19,6 +19,11 @@
   },
   "homepage": "https://github.com/aleivc/apiv6#readme",
   "dependencies": {
+    "@alicloud/iot20180120": "^3.1.3",
+    "@alicloud/openapi-client": "^0.4.6",
+    "@alicloud/tea-util": "^1.4.6",
+    "@turf/rhumb-bearing": "^6.5.0",
+    "@turf/turf": "^6.5.0",
     "axios": "^1.3.4",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
@@ -27,6 +32,7 @@
     "moment": "^2.29.4",
     "mysql": "^2.18.1",
     "node-xlsx": "^0.21.0",
+    "rhea": "^3.0.2",
     "nodemon": "^2.0.21",
     "websocket": "^1.0.34",
     "ws": "^8.13.0"
