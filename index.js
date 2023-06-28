@@ -8,6 +8,8 @@ require('dotenv').config()
 
 app.use(express.json());
 
+app.use('/api/test', require('./controller/test'))
+
 app.use('/api/sim', require('./controller/sim'));
 app.use('/api/station', require('./controller/station'))
 
