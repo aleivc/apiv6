@@ -16,7 +16,7 @@ const endpoint = process.env.Endpoint;
 const iotInstanceId = process.env.IotInstanceId;
 
 station.post("/getStationInfo", async (req, res) => {
-  const result = await getStationInfo(productKey, [...req.body]);
+  const result = await getStationInfo(productKey, req.body.devices);
   res.send(result.map((item) => item.value.body.data.list.propertyStatusInfo));
 });
 
