@@ -11,16 +11,15 @@ const accessKeyId = process.env.AccessKeyId;
 const accessKeySecret = process.env.AccessKeySecret;
 
 // 根据 deviceName 查询 productKey
-const productKey = process.env.ProductKey;
 const endpoint = process.env.Endpoint;
 const iotInstanceId = process.env.IotInstanceId;
 
 station.post("/getStationInfo", async (req, res) => {
-  const result = await getStationInfo(productKey, req.body.devices);
+  const result = await getStationInfo(req.body.devices);
   res.send(result.map((item) => item.value.body.data.list.propertyStatusInfo));
 });
 
-async function getStationInfo(productKey, [d1,d3]) {
+async function getStationInfo([d1,d3]) {
   let config = new $OpenApi.Config({
     // 必填，您的 AccessKey ID
     accessKeyId: accessKeyId,
@@ -33,7 +32,7 @@ async function getStationInfo(productKey, [d1,d3]) {
   const client = new Iot20180120.default(config);
   let q1 = new $Iot20180120.QueryDevicePropertyStatusRequest({
     iotInstanceId,
-    productKey,
+    productKey: "g0pbkU6CoV7",
     deviceName: d1,
   });
 

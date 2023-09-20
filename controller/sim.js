@@ -70,13 +70,8 @@ async function getSingle(deviceName) {
 
 const sim = express.Router();
 
-sim.post('/simInfo', async (req, res) => {
-    const { deviceName } = req.body;
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', '*');
-    res.header('Access-Control-Allow-Methods', '*');
-    res.header('Content-Type', 'application/json;charset=utf-8');
-    res.send(!deviceName ?  [] : await getResult(deviceName.replaceAll('  ', ' ').split(' ')));
+sim.get('/getSimInfo', async (req, res) => {
+    res.send(await getResult());
 })
 
 async function getResult(devices) {
