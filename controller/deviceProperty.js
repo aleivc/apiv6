@@ -30,8 +30,9 @@ const endTime = moment();
 
 const params = {
     endTime: endTime.valueOf(),
+    // endTime: moment('2023-10-23 00:00:00').valueOf(),
     // startTime: endTime.subtract(1, "month").valueOf(),
-    startTime: moment('2023-09-21 20:00:00').valueOf(),
+    startTime: moment('2023-10-24 00:00:00').valueOf(),
     pageSize: 100,
     productKey: "g0pbS6Z9pL2",
 };
@@ -103,7 +104,7 @@ async function getAllData(p) {
 
 async function getAllPropertyData() {
     const allData = [];
-    for (const i of ["Station30"]) {
+    for (const i of ["Station29"]) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         await getDevicePropertyStatus(i).then(async (res) => {
             const { propertyStatusInfo } = res.body.data.list;
@@ -155,10 +156,10 @@ getAllPropertyData().then(async (res) => {
         newData.push(temp);
     });
     const sheetOptions = {
-        "!cols": [{ wch: 20 }, { wch: 30 }, ...uniqueIdentifiers.map(i => ({ wch: 10 }))],
+        "!cols": [{ wch: 20 }, { wch: 30 }, ...uniqueIdentifiers.map(() => ({ wch: 10 }))],
     };
     const worksheets = [{ name: `sheet1`, data: newData, options: sheetOptions }];
     const buffer = xlsx.build(worksheets); // Returns a buffer
-    await fs.writeFileSync(`./${deviceName[0]}.xlsx`, buffer);
+    await fs.writeFileSync(`./dist/${deviceName[0]}.xlsx`, buffer);
     console.log('completed!')
 });
