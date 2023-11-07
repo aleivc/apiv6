@@ -6,4 +6,4 @@ RUN yarn cache clean && yarn --update-checksums
 
 EXPOSE 3005
 
-CMD ["yarn", "start"]
+CMD ["npm", "start"]

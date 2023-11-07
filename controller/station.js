@@ -1,54 +1,110 @@
-const $Iot20180120 = require("@alicloud/iot20180120");
-const Iot20180120 = require("@alicloud/iot20180120");
-const $OpenApi = require("@alicloud/openapi-client");
-const $Util = require("@alicloud/tea-util");
+const moment = require("moment");
+const xlsx = require("node-xlsx");
+const fs = require("fs");
 
-const express = require("express");
+const {getDevicePropertyStatus, getDevicePropertyData} = require('./../lib/aliyunLib')
 
-const station = express.Router();
+// if that key doesn't work.
+const keyTable = [
+    ['Station04', 'g0pbkU6CoV7'],
+    ['Station10', 'g0pbS6Z9pL2'],
+]
 
-const accessKeyId = process.env.AccessKeyId;
-const accessKeySecret = process.env.AccessKeySecret;
-
-// 根据 deviceName 查询 productKey
-const endpoint = process.env.Endpoint;
-const iotInstanceId = process.env.IotInstanceId;
-
-station.post("/getStationInfo", async (req, res) => {
-    const result = await getStationInfo(req.body.devices);
-    res.send(result.map((item) => item.value.body.data.list.propertyStatusInfo));
-});
-
-async function getStationInfo([d1, d3]) {
-    let config = new $OpenApi.Config({
-        // 必填，您的 AccessKey ID
-        accessKeyId: accessKeyId,
-        // 必填，您的 AccessKey Secret
-        accessKeySecret: accessKeySecret,
-    });
-    // 访问的域名
-    config.endpoint = endpoint;
-
-    const client = new Iot20180120.default(config);
-    let q1 = new $Iot20180120.QueryDevicePropertyStatusRequest({
-        iotInstanceId,
-        productKey: "g0pbkU6CoV7",
-        deviceName: d1,
-    });
-
-    let q3 = new $Iot20180120.QueryDevicePropertyStatusRequest({
-        iotInstanceId,
-        productKey: "g0pbS6Z9pL2",
-        deviceName: d3,
-    });
-
-    let runtime = new $Util.RuntimeOptions({});
-
-    console.log(runtime);
-    return await Promise.allSettled([
-        client.queryDevicePropertyStatusWithOptions(q1, runtime),
-        client.queryDevicePropertyStatusWithOptions(q3, runtime),
-    ]);
+function processResult(data, attr) {
+    let result = [];
+    for (const info of data.list[attr]) {
+        info.time
+            ? result.push({
+                ...info,
+                time: moment(parseInt(info.time)).format("YYYY-MM-DD HH:mm:ss"),
+            })
+            : null;
+    }
+    return result;
 }
 
-module.exports = station;
+async function getAllData(p) {
+    const allData = [];
+
+    async function getAndStore(p) {
+        const { body } = await getDevicePropertyData(p);
+        const arr = processResult(body.data, "propertyInfo");
+        allData.push(...arr);
+
+        if (body.data.nextValid) {
+            await getAndStore({ ...p, endTime: body.data.nextTime });
+        }
+    }
+
+    await getAndStore(p);
+    return allData;
+}
+
+async function getAllPropertyData() {
+    const allData = [];
+    for (const i of ["Station30"]) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await getDevicePropertyStatus({deviceName: i, productKey: 'g0pbS6Z9pL2'}).then(async (res) => {
+            const { propertyStatusInfo } = res.body.data.list;
+
+            for (const j of propertyStatusInfo) {
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+                await getAllData({
+                    // endTime: endTime.valueOf(),
+                    endTime: moment('2023-10-29 23:59:59').valueOf(),
+                    // startTime: endTime.subtract(1, "month").valueOf(),
+                    startTime: moment('2023-10-23 00:00:00').valueOf(),
+                    pageSize: 100,
+                    productKey: "g0pbS6Z9pL2",
+                    deviceName: i,
+                    identifier: j.identifier,
+                }).then(async (res) => {
+                    const tableInfo = res.map((r) => ({
+                        deviceName: i,
+                        time: r.time,
+                        modelName: j.name,
+                        identifier: j.identifier,
+                        value: r.value,
+                    }));
+                    console.log(`done with ${j.identifier}`);
+
+                    allData.push(...tableInfo);
+                });
+            }
+        });
+    }
+    return allData;
+}
+
+getAllPropertyData().then(async (res) => {
+    const data = res;
+    const uniqueIdentifiers = [...new Set(data.map((item) => item.identifier))];
+    const newData = [["deviceName", "time", ...uniqueIdentifiers]];
+
+    const deviceName = data.map((i) => i.deviceName);
+    const time = data.map((i) => i.time);
+
+    const valueColumns = [];
+
+    uniqueIdentifiers.forEach((i) => {
+        const d = data.filter((j) => j.identifier === i).map((i) => i.value);
+        valueColumns.push([...d]);
+    });
+
+    valueColumns[0] && valueColumns[0].forEach((i, index) => {
+        const temp = [deviceName[index], time[index]];
+        uniqueIdentifiers.forEach((j, k) => {
+            temp.push(valueColumns[k][index]);
+        });
+        newData.push(temp);
+    });
+
+    const sheetOptions = {
+        "!cols": [{ wch: 20 }, { wch: 30 }, ...uniqueIdentifiers.map(() => ({ wch: 10 }))],
+    };
+
+    const worksheets = [{ name: `sheet1`, data: newData, options: sheetOptions }];
+    const buffer = xlsx.build(worksheets); // Returns a buffer
+    await fs.writeFileSync(`./files/${deviceName[0]}.xlsx`, buffer);
+    console.log('completed!')
+});

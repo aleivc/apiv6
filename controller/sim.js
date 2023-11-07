@@ -3,6 +3,10 @@ const axios = require('axios');
 const moment = require('moment');
 const md5 = require('js-md5');
 
+const path = require("path");
+
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+
 async function getDate(deviceName, simNum) {
     const P_AgentID = process.env.P_AgentID;
     const P_CheckCode = process.env.P_CheckCode;
@@ -70,17 +74,68 @@ async function getSingle(deviceName) {
 
 const sim = express.Router();
 
-sim.get('/getSimInfo', async (req, res) => {
-    res.send(await getResult());
+sim.get('/query', async (req, res) => {
+    const {deviceNames, range} = req.query;
+    if(deviceNames) {
+        const list = deviceNames.split(',');
+
+        const total = []
+        for(let i of list) {
+            const result = await getSingle(i)
+            total.push(result)
+        }
+
+        res.status(200).send({
+            success: true,
+            data: total,
+            errorMessage: ""
+        })
+    }
+
+    if(range) {
+        const total = []
+        const [a, b] = range.split(',')
+        const min = Number(a);
+        const max = Number(b);
+
+        if(max > min) {
+            for(let i = min; i <= max; i++) {
+                let num = i;
+                if(num < 10) {
+                    num = '000' + num;
+                } else if (num < 100) {
+                    num = '00' + num
+                } else if (num < 1000) {
+                    num = '0' + num
+                }
+                const result = await getSingle('10200' + num)
+                total.push(result)
+            }
+
+            res.status(200).send({
+                success: true,
+                data: total,
+                errorMessage: ""
+            })
+        }
+    }
 })
 
-async function getResult(devices) {
-    const arr = [];
-    for (let i of devices) {
-        const res = await getSingle(i)
-        arr.push(res);
-    }
-    return arr;
-}
+// for excel download.
+
+// const arr = [['设备号', '卡号', '到期日期', '供应商']];
+// for (let i of devices) {
+//     console.log('found: ', i);
+//     if(i) {
+//         const res = await getSingle(i);
+//         arr.push(res);
+//     }
+// }
+// const sheetOptions = {
+//     "!cols": [{ wch: 20 }, { wch: 30 }, { wch: 30 }, { wch: 30 }],
+// };
+// const worksheets = [{ name: `sheet1`, data: arr, options: sheetOptions }];
+// const buffer = xlsx.build(worksheets); // Returns a buffer
+// await fs.writeFileSync(`./5965-6001.xlsx`, buffer);
 
 module.exports = sim;
