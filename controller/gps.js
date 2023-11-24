@@ -1,10 +1,11 @@
 const express = require('express');
 const axios = require('axios');
+const moment = require("moment");
 const gps = express.Router();
 
 gps.get('/query', async (req, res, next) => {
     const {deviceName, startTime, endTime} = req.query;
-
+    const timeFormat = 'YYYY-MM-DD HH:mm:ss'
     async function getAllData() {
         let total = [];
         let pageIndex = 1;
@@ -23,8 +24,11 @@ gps.get('/query', async (req, res, next) => {
                                 for (let j of result) {
                                     const {time, lgd, ltd} = j
                                     if (lgd !== 0 && ltd !== 0) {
-                                        total.push([lgd, ltd, time])
-                                        console.log('done of ', time);
+                                        // total.push([lgd, ltd, time])
+
+                                        const t = moment(j.time, 'x').format(timeFormat)
+                                        Object.values(j).concat(t);
+                                        console.log(`done of ${deviceName} at ${t}`);
                                         pageIndex++;
                                         await getAndStore(pageIndex)
                                     }

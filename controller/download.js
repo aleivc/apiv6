@@ -7,5 +7,4 @@ download.get('/single', (req, res, next) => {
         if(err) console.log(err)
     })
 })
-
 module.exports = download
