@@ -6,51 +6,47 @@ const gps = express.Router();
 gps.get('/query', async (req, res, next) => {
     const {deviceName, startTime, endTime} = req.query;
     const timeFormat = 'YYYY-MM-DD HH:mm:ss'
-    async function getAllData() {
-        let total = [];
-        let pageIndex = 1;
 
-        async function getAndStore(page) {
-            const {data} = await axios.get(`http://101.132.195.53/tools/gps_data.php?dbChange=false&page=${page}&device_name=${deviceName}&start=${startTime}&end=${endTime}`)
+    let pageIndex = 1;
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Transfer-Encoding', 'chunked');
 
-            if (data && data.length) {
-                for (let i of data) {
-                    await axios
-                        .get(`http://101.132.195.53/tools/gps_data.php?id=${i.id}&device_name=${deviceName}`)
-                        .then(async resp => {
-                            if (resp.data && resp.data !== 'null') {
-                                const result = JSON.parse(resp.data).reverse();
+    function getData() {
+        axios.get(`http://101.132.195.53/tools/gps_data.php?dbChange=false&page=${pageIndex}&device_name=${deviceName}&start=${startTime}&end=${endTime}`)
+            .then(async (resp_arr) => {
+                if (resp_arr.data && resp_arr.data.length) {
+                    for (let i of resp_arr.data) {
+                        axios
+                            .get(`http://101.132.195.53/tools/gps_data.php?id=${i.id}&device_name=${deviceName}`)
+                            .then(async (resp) => {
+                                if (resp && resp.data !== 'null') {
+                                    const json = JSON.parse(resp.data);
+                                    if (json && json.length) {
+                                        for (let j of json) {
+                                            const {time, lgd, ltd} = j
+                                            if (lgd !== 0 && ltd !== 0) {
+                                                const t = moment(time, 'x').format(timeFormat)
 
-                                for (let j of result) {
-                                    const {time, lgd, ltd} = j
-                                    if (lgd !== 0 && ltd !== 0) {
-                                        // total.push([lgd, ltd, time])
-
-                                        const t = moment(j.time, 'x').format(timeFormat)
-                                        Object.values(j).concat(t);
-                                        console.log(`done of ${deviceName} at ${t}`);
-                                        pageIndex++;
-                                        await getAndStore(pageIndex)
+                                                console.log(`${t} lgd: ${lgd} ltd: ${ltd}`);
+                                                res.write(JSON.stringify({...j, time: t}))
+                                                pageIndex++;
+                                                getData();
+                                            }
+                                        }
                                     }
                                 }
-                            }
-                        })
+                            }).catch(error => next(error))
+                    }
+                } else {
+                    res.end()
                 }
-            }
-        }
-
-        await getAndStore(pageIndex);
-        return total
+            })
+            .catch(error => {
+                next(error)
+            })
     }
 
-    await getAllData().then(resp => {
-        // todo log
-        res.status(200).send({
-            success: true,
-            data: resp,
-            errorMessage: ""
-        })
-    })
+    getData(pageIndex);
 })
 
 module.exports = gps;
