@@ -6,12 +6,15 @@ const gps = express.Router();
 gps.get('/query', async (req, res, next) => {
     const {deviceName, startTime, endTime} = req.query;
     const timeFormat = 'YYYY-MM-DD HH:mm:ss'
+
     async function getAllData() {
         let total = [];
         let pageIndex = 1;
 
         async function getAndStore(page) {
-            const {data} = await axios.get(`http://101.132.195.53/tools/gps_data.php?dbChange=false&page=${page}&device_name=${deviceName}&start=${startTime}&end=${endTime}`)
+            const {data} = await axios
+                .get(`http://101.132.195.53/tools/gps_data.php?dbChange=false&page=${page}&device_name=${deviceName}&start=${startTime}&end=${endTime}`)
+                .catch(error => next(error))
 
             if (data && data.length) {
                 for (let i of data) {
@@ -24,10 +27,9 @@ gps.get('/query', async (req, res, next) => {
                                 for (let j of result) {
                                     const {time, lgd, ltd} = j
                                     if (lgd !== 0 && ltd !== 0) {
-                                        // total.push([lgd, ltd, time])
 
                                         const t = moment(j.time, 'x').format(timeFormat)
-                                        Object.values(j).concat(t);
+                                        total.push([lgd, ltd, t])
                                         console.log(`done of ${deviceName} at ${t}`);
                                         pageIndex++;
                                         await getAndStore(pageIndex)
