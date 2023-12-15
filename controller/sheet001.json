@@ -1,0 +1,262 @@
+[
+    {
+        "date": "2023-01-03",
+        "category": "LG_1_1",
+        "value": 0.129253
+    },
+    {
+        "date": "2023-01-08",
+        "category": "LG_1_1",
+        "value": 0.166017
+    },
+    {
+        "date": "2023-01-18",
+        "category": "LG_1_1",
+        "value": 0.177677
+    },
+    {
+        "date": "2023-01-20",
+        "category": "LG_1_1",
+        "value": 0.186563
+    },
+    {
+        "date": "2023-01-25",
+        "category": "LG_1_1",
+        "value": 0.171812
+    },
+    {
+        "date": "2023-01-28",
+        "category": "LG_1_1",
+        "value": 0.187045
+    },
+    {
+        "date": "2023-01-30",
+        "category": "LG_1_1",
+        "value": 0.196639
+    },
+    {
+        "date": "2023-03-04",
+        "category": "LG_1_1",
+        "value": 0.181859
+    },
+    {
+        "date": "2023-03-06",
+        "category": "LG_1_1",
+        "value": 0.161285
+    },
+    {
+        "date": "2023-03-09",
+        "category": "LG_1_1",
+        "value": 0.157463
+    },
+    {
+        "date": "2023-03-14",
+        "category": "LG_1_1",
+        "value": 0.165512
+    },
+    {
+        "date": "2023-03-16",
+        "category": "LG_1_1",
+        "value": null
+    },
+    {
+        "date": "2023-03-26",
+        "category": "LG_1_1",
+        "value": 0.221919
+    },
+    {
+        "date": "2023-04-03",
+        "category": "LG_1_1",
+        "value": null
+    },
+    {
+        "date": "2023-04-28",
+        "category": "LG_1_1",
+        "value": 0.130384
+    },
+    {
+        "date": "2023-04-30",
+        "category": "LG_1_1",
+        "value": 0.152345
+    },
+    {
+        "date": "2023-05-13",
+        "category": "LG_1_1",
+        "value": 0.0486091
+    },
+    {
+        "date": "2023-05-15",
+        "category": "LG_1_1",
+        "value": 0.125445
+    },
+    {
+        "date": "2023-05-25",
+        "category": "LG_1_1",
+        "value": 0.106238
+    },
+    {
+        "date": "2023-05-28",
+        "category": "LG_1_1",
+        "value": 0.0600701
+    },
+    {
+        "date": "2023-05-30",
+        "category": "LG_1_1",
+        "value": 0.129614
+    },
+    {
+        "date": "2023-06-02",
+        "category": "LG_1_1",
+        "value": 0.0945416
+    },
+    {
+        "date": "2023-06-09",
+        "category": "LG_1_1",
+        "value": -0.0730104
+    },
+    {
+        "date": "2023-06-14",
+        "category": "LG_1_1",
+        "value": 0.104577
+    },
+    {
+        "date": "2023-06-22",
+        "category": "LG_1_1",
+        "value": 0.17039
+    },
+    {
+        "date": "2023-07-02",
+        "category": "LG_1_1",
+        "value": 0.139105
+    },
+    {
+        "date": "2023-07-12",
+        "category": "LG_1_1",
+        "value": 0.133683
+    },
+    {
+        "date": "2023-07-14",
+        "category": "LG_1_1",
+        "value": 0.286028
+    },
+    {
+        "date": "2023-07-17",
+        "category": "LG_1_1",
+        "value": 0.325084
+    },
+    {
+        "date": "2023-08-03",
+        "category": "LG_1_1",
+        "value": 0.61478
+    },
+    {
+        "date": "2023-08-06",
+        "category": "LG_1_1",
+        "value": 0.77678
+    },
+    {
+        "date": "2023-08-08",
+        "category": "LG_1_1",
+        "value": null
+    },
+    {
+        "date": "2023-08-13",
+        "category": "LG_1_1",
+        "value": 0.627374
+    },
+    {
+        "date": "2023-08-16",
+        "category": "LG_1_1",
+        "value": 0.766159
+    },
+    {
+        "date": "2023-08-21",
+        "category": "LG_1_1",
+        "value": 0.821262
+    },
+    {
+        "date": "2023-08-26",
+        "category": "LG_1_1",
+        "value": 0.792296
+    },
+    {
+        "date": "2023-08-28",
+        "category": "LG_1_1",
+        "value": null
+    },
+    {
+        "date": "2023-09-02",
+        "category": "LG_1_1",
+        "value": 0.816017
+    },
+    {
+        "date": "2023-09-07",
+        "category": "LG_1_1",
+        "value": null
+    },
+    {
+        "date": "2023-09-10",
+        "category": "LG_1_1",
+        "value": null
+    },
+    {
+        "date": "2023-09-17",
+        "category": "LG_1_1",
+        "value": null
+    },
+    {
+        "date": "2023-10-15",
+        "category": "LG_1_1",
+        "value": 0.691823
+    },
+    {
+        "date": "2023-10-17",
+        "category": "LG_1_1",
+        "value": 0.632841
+    },
+    {
+        "date": "2023-11-01",
+        "category": "LG_1_1",
+        "value": 0.216261
+    },
+    {
+        "date": "2023-11-19",
+        "category": "LG_1_1",
+        "value": 0.220689
+    },
+    {
+        "date": "2023-11-21",
+        "category": "LG_1_1",
+        "value": 0.204927
+    },
+    {
+        "date": "2023-11-24",
+        "category": "LG_1_1",
+        "value": 0.192275
+    },
+    {
+        "date": "2023-11-26",
+        "category": "LG_1_1",
+        "value": null
+    },
+    {
+        "date": "2023-11-29",
+        "category": "LG_1_1",
+        "value": 0.189806
+    },
+    {
+        "date": "2023-12-01",
+        "category": "LG_1_1",
+        "value": 0.202593
+    },
+    {
+        "date": "2023-12-09",
+        "category": "LG_1_1",
+        "value": null
+    },
+    {
+        "date": "2023-12-14",
+        "category": "LG_1_1",
+        "value": 0.165957
+    }
+]

@@ -13,12 +13,12 @@ gps.get('/query', async (req, res, next) => {
 
     function getData() {
         axios.get(`http://101.132.195.53/tools/gps_data.php?dbChange=false&page=${pageIndex}&device_name=${deviceName}&start=${startTime}&end=${endTime}`)
-            .then(async (resp_arr) => {
+            .then((resp_arr) => {
                 if (resp_arr.data && resp_arr.data.length) {
                     for (let i of resp_arr.data) {
                         axios
                             .get(`http://101.132.195.53/tools/gps_data.php?id=${i.id}&device_name=${deviceName}`)
-                            .then(async (resp) => {
+                            .then((resp) => {
                                 if (resp && resp.data !== 'null') {
                                     const json = JSON.parse(resp.data);
                                     if (json && json.length) {
@@ -26,7 +26,6 @@ gps.get('/query', async (req, res, next) => {
                                             const {time, lgd, ltd} = j
                                             if (lgd !== 0 && ltd !== 0) {
                                                 const t = moment(time, 'x').format(timeFormat)
-
                                                 console.log(`${t} lgd: ${lgd} ltd: ${ltd}`);
                                                 res.write(JSON.stringify({...j, time: t}))
                                                 pageIndex++;
@@ -35,13 +34,17 @@ gps.get('/query', async (req, res, next) => {
                                         }
                                     }
                                 }
-                            }).catch(error => next(error))
+                            })
+                            .catch(error => {
+                                next(error)
+                            })
                     }
                 } else {
                     res.end()
                 }
             })
             .catch(error => {
+                res.end()
                 next(error)
             })
     }
