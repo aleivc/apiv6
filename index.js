@@ -19,6 +19,7 @@ app.use('/api/sim', require('./controller/sim'));
 app.use('/api/gps', require('./controller/gps'));
 app.use('/api/sluice', require('./controller/sluice'))
 app.use('/api/download', require('./controller/download'))
+app.use('/api/weathers', require('./controller/weathers'))
 
 app.use((err, req, res, next) => {
     // 什么东西会走到这里来？
