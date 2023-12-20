@@ -2,13 +2,21 @@ const mysql = require("mysql");
 const xlsx = require("node-xlsx");
 const fs = require('fs');
 const moment = require("moment")
+const path = require("path");
 
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+const {
+    TRACK_HOST,
+    TRACK_USER,
+    TRACK_PASS,
+    TRACK_DATABASE,
+} = process.env;
 // MySQL connection configuration
 const connection = mysql.createConnection({
-    host: '8.133.32.194',
-    user: 'iotmx',
-    password: 'H1KgOBb4',
-    database: 'iot_work_track_record'
+    host: TRACK_HOST,
+    user: TRACK_USER,
+    password: TRACK_PASS,
+    database: TRACK_DATABASE
 });
 
 // Connect to MySQL
@@ -42,7 +50,7 @@ connection.connect((err) => {
             create_time < ${endTimestamp}
         ORDER BY create_time DESC
         `,
-        async (error, results, fields) => {
+        async (error, results) => {
             if (error) throw error;
 
             const sheet = []

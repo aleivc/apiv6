@@ -1,15 +1,23 @@
 const mysql = require("mysql");
 const moment = require("moment")
-const xlsx = require("node-xlsx");
 const fs = require("fs");
+const path = require("path");
 
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+const {
+    REMOTE_HOST,
+    REMOTE_PORT,
+    REMOTE_USER,
+    REMOTE_PASS,
+    REMOTE_DATABASE
+} = process.env;
 // MySQL connection configuration
 const connection = mysql.createConnection({
-    host: '172.16.2.213',
-    port: 7900,
-    user: 'remote_data',
-    password: 'sfrjgri&99YubmIklOp',
-    database: 'remote_data'
+    host: REMOTE_HOST,
+    port: REMOTE_PORT,
+    user: REMOTE_USER,
+    password: REMOTE_PASS,
+    database: REMOTE_DATABASE
 });
 
 // Connect to MySQL
@@ -20,55 +28,34 @@ connection.connect((err) => {
     }
     console.log('Connected to MySQL as id ' + connection.threadId);
 
-    const device_name = '102005993';
-    const year = '2023';
-    const startDay = '10-22';
-    const endDay = '11-23';
-    const timeFormat = 'YYYY-MM-DD HH:mm:ss'
-    const startTimestamp = moment(`${year}-${startDay} 00:00:00`, timeFormat).valueOf();
-    const endTimestamp = moment(`${year}-${endDay} 00:00:00`, timeFormat).valueOf();
+    const table = ['lingang_zs' || 'lingang_zs_sg']
+    const column = 'LG_1_1';
 
-    // original sql statement
-    // create_time >= (UNIX_TIMESTAMP('2023-07-22') * 1000) AND
-    // create_time < (UNIX_TIMESTAMP('2023-11-23') * 1000)
-    const columns = ['date', 'LG_1_1']
-    const zs = `
-        SELECT date, LG_1_1 FROM lingang_zs
-        WHERE date > '2023/01/01'
-        LIMIT 100 
-    `;
-    const zs_sg = `
-        SELECT date, LG_1_1 FROM lingang_zs_sg
-        WHERE date > '2023/01/01'
-        LIMIT 100  
-    `
+    for (let x of table) {
+        const zs = `
+            SELECT date,${column} FROM ${x}
+            WHERE date > '2023/01/01'
+            LIMIT 100 
+        `;
 
-    connection.query(zs_sg, async (error, results, fields) => {
-        if (error) throw error;
-        console.log(results);
-        // written in json file
-        const sheet = []
-        results.forEach((row) => {
-            sheet.push({date: moment(row.date).format('YYYY-MM-DD'), category: 'LG_1_1', value: row.LG_1_1})
+        connection.query(zs, async (error, results) => {
+            if (error) throw error;
+            console.log(results);
+            // written in json file
+            const sheet = []
+
+            results.forEach((row) => {
+                sheet.push({date: moment(row.date).format('YYYY-MM-DD'), category: x, value: row[column]})
+            });
+
+            await fs.writeFileSync(`./${x}.json`, JSON.stringify(sheet));
+            connection.end((err) => {
+                if (err) {
+                    console.error('Error closing MySQL connection: ' + err.stack);
+                    return;
+                }
+                console.log('MySQL connection closed.');
+            });
         });
-
-        // const sheetOptions = {
-        //     "!cols": [
-        //         columns.map(c => ({ wch: 30 }))
-        //     ],
-        // };
-        //
-        const sheetName = `sheet002`;
-        //
-        // const worksheets = [{ name: sheetName, data: sheet, options: sheetOptions }];
-        // const buffer = xlsx.build(worksheets);
-        await fs.writeFileSync(`./${sheetName}.json`, JSON.stringify(sheet));
-        connection.end((err) => {
-            if (err) {
-                console.error('Error closing MySQL connection: ' + err.stack);
-                return;
-            }
-            console.log('MySQL connection closed.');
-        });
-    });
+    }
 });

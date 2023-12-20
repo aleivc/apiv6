@@ -43,7 +43,7 @@ async function getAllData(p) {
 
 async function getAllPropertyData() {
     const allData = [];
-    for (const i of ["Station09"]) {
+    for (const i of ["Station33"]) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         await getDevicePropertyStatus({deviceName: i, productKey: 'g0pbS6Z9pL2'}).then(async (res) => {
             const { propertyStatusInfo } = res.body.data.list;
@@ -52,9 +52,9 @@ async function getAllPropertyData() {
                 await new Promise((resolve) => setTimeout(resolve, 2000));
                 await getAllData({
                     // startTime: endTime.subtract(1, "month").valueOf(),
-                    startTime: moment('2023-09-30 00:00:00').valueOf(),
+                    startTime: moment('2023-11-29 00:00:00').valueOf(),
                     // endTime: endTime.valueOf(),
-                    endTime: moment('2023-11-30 23:59:59').valueOf(),
+                    endTime: moment('2023-12-19 23:59:59').valueOf(),
                     pageSize: 100,
                     productKey: "g0pbS6Z9pL2",
                     deviceName: i,
